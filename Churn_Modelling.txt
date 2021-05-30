@@ -1,0 +1,61 @@
+*************************************
+
+import pandas as pd
+
+data = pd.read_csv('Churn_Modelling.csv')
+
+data.info()
+
+GENDER = pd.get_dummies(data['Gender'],drop_first=True)
+
+GEO = pd.get_dummies(data['Geography'],drop_first=True)
+
+HAS = pd.get_dummies(data['HasCrCard'],drop_first=True,prefix='HAS')
+
+IS = pd.get_dummies(data['IsActiveMember'],drop_first=True,prefix='Is')
+
+data.columns
+
+y = data['Exited']
+
+x = data[['CreditScore', 'Age', 'Tenure', 'Balance', 'NumOfProducts','EstimatedSalary']]
+
+X = pd.concat([x,IS,GENDER,GEO,HAS],axis=1)
+
+X.columns
+
+X.shape
+
+from keras.models import Sequential
+
+model = Sequential()
+
+from keras.layers import Dense
+
+model.add(Dense(activation='relu',units=12,input_dim=11))
+
+model.add(Dense(activation='relu',units=8))
+
+model.add(Dense(activation='relu',units=4))
+
+model.add(Dense(activation='relu',units=2))
+
+model.summary()
+
+model.add(Dense(activation='sigmoid',units=1))
+
+model.get_weights()
+
+from keras.optimizers import Adam
+
+model.compile(loss='binary_crossentropy',optimizer=Adam(),metrics=['accuracy'])
+
+model.fit(X,y)
+
+X.shape
+
+X.shape[0] == y.shape[0]
+
+##To save the Model
+
+model.save('churn.h5')
